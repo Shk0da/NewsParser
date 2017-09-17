@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="0002" author="ashkondin">
+
+        <createTable schemaName="webapp" tableName="news_feeds">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="url" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="type" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="check_frequency" type="int"/>
+            <column name="enabled" type="boolean"/>
+            <column name="title_tag" type="varchar(255)"/>
+            <column name="article_tag" type="varchar(255)"/>
+            <column name="datetime_tag" type="varchar(255)"/>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" references="users" foreignKeyName="fk_news_feeds_users_id"/>
+            </column>
+        </createTable>
+
+        <createTable schemaName="webapp" tableName="news">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="url" type="varchar(255)"/>
+            <column name="title" type="varchar(255)"/>
+            <column name="content" type="text"/>
+            <column name="img_url" type="varchar(255)"/>
+            <column name="datetime" type="timestamp"/>
+            <column name="created" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="feed_id" type="int">
+                <constraints nullable="false" references="news_feeds" foreignKeyName="fk_news_feed_id"/>
+            </column>
+        </createTable>
+
+        <createIndex catalogName="webapp"
+                     indexName="ix_news_title"
+                     schemaName="webapp"
+                     tableName="news">
+            <column name="title" type="varchar(255)"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

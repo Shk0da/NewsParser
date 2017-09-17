@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="0003" author="ashkondin">
+
+       <sql endDelimiter=";\n">
+           INSERT INTO webapp.news_feeds (id, name, url, type, check_frequency, enabled, title_tag, article_tag, datetime_tag, user_id) VALUES (1, 'Lenta.ru', 'https://lenta.ru/rss/news', 0, 10, true, 'b-topic__title', 'js-topic__text', 'g-date', 1);
+           INSERT INTO webapp.news_feeds (id, name, url, type, check_frequency, enabled, title_tag, article_tag, datetime_tag, user_id) VALUES (2, 'UralWeb.ru', 'https://www.uralweb.ru/news/', 1, 60, true, 'h1', 'article_body', 'time', 1);
+       </sql>
+
+    </changeSet>
+</databaseChangeLog>

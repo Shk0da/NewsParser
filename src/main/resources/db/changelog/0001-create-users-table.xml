@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="0001" author="ashkondin">
+
+        <createTable schemaName="webapp" tableName="authority">
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+        </createTable>
+
+        <createTable schemaName="webapp" tableName="users">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="activated" type="boolean" defaultValue="false"/>
+            <column name="activation_key" type="varchar(20)"/>
+            <column name="email" type="varchar(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="first_name" type="varchar(50)"/>
+            <column name="last_name" type="varchar(50)"/>
+            <column name="image_url" type="varchar(256)"/>
+            <column name="lang_key" type="varchar(5)"/>
+            <column name="login" type="varchar(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password_hash" type="varchar(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reset_date" type="bytea"/>
+            <column name="reset_key" type="varchar(20)"/>
+        </createTable>
+
+        <createTable schemaName="webapp" tableName="user_authority">
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" references="users" foreignKeyName="fk_user_authority_users_id"/>
+            </column>
+            <column name="authority_name" type="varchar(50)"/>
+        </createTable>
+
+        <addPrimaryKey constraintName="user_authority_pkey"
+                       tableName="user_authority"
+                       columnNames="user_id, authority_name"/>
+
+        <createTable schemaName="webapp" tableName="persistent_token">
+            <column name="series" type="varchar(255)">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="ip_address" type="varchar(39)"/>
+            <column name="token_date" type="bytea"/>
+            <column name="token_value" type="varchar(255)"/>
+            <column name="user_agent" type="varchar(255)"/>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" references="users" foreignKeyName="fk_persistent_token_users_id"/>
+            </column>
+        </createTable>
+
+        <insert tableName="authority">
+            <column name="name">ROLE_ADMIN</column>
+        </insert>
+        <insert tableName="authority">
+            <column name="name">ROLE_USER</column>
+        </insert>
+        <insert tableName="authority">
+            <column name="name">ROLE_ANONYMOUS</column>
+        </insert>
+
+        <insert tableName="users">
+            <column name="login">admin</column>
+            <column name="email">admin@newsparser.local</column>
+            <column name="password_hash">$2a$04$Ty3gu5RHmjIex6kU17R9pe38DevAMK78CM7xnU7.BgpwQNUqS9flm</column>
+            <column name="activated">true</column>
+        </insert>
+
+        <insert tableName="user_authority">
+            <column name="user_id">1</column>
+            <column name="authority_name">ROLE_ADMIN</column>
+        </insert>
+
+        <createTable schemaName="webapp" tableName="spring_session">
+            <column name="session_id" type="char(36)">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="creation_time" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_access_time" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="max_inactive_interval" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="principal_name" type="varchar(100)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createIndex schemaName="webapp"
+                     indexName="spring_session_ix1"
+                     tableName="spring_session"
+                     unique="true">
+            <column name="last_access_time" type="bigint"/>
+        </createIndex>
+
+        <createTable schemaName="webapp" tableName="spring_session_attributes">
+            <column name="session_id" type="char(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="attribute_name" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="attribute_bytes" type="bytea"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="spring_session_attributes"
+                                 baseColumnNames="session_id"
+                                 constraintName="spring_session_attributes_fk"
+                                 referencedTableName="spring_session"
+                                 referencedColumnNames="session_id"
+                                 deleteCascade="true" onDelete="CASCADE"/>
+
+        <addPrimaryKey constraintName="spring_session_attributes_pk"
+                       tableName="spring_session_attributes"
+                       columnNames="session_id, attribute_name"/>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="layouts/header">...</div>
+<body class="top-navigation">
+<div id="wrapper">
+    <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom white-bg">
+            <nav class="navbar navbar-static-top" role="navigation">
+                <div class="navbar-header">
+                    <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse"
+                            class="navbar-toggle collapsed" type="button">
+                        <i class="fa fa-reorder"></i>
+                    </button>
+                    <a href="/" class="navbar-brand">NewsAggregator v1.0</a>
+                </div>
+                <div class="navbar-collapse collapse" id="navbar">
+                    <ul class="nav navbar-top-links navbar-right">
+                        <li>
+                            <a th:href="@{/logout}">
+                                <i class="fa fa-sign-out"></i> Log out
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <div class="wrapper wrapper-content">
+            <div class="container">
+                <div id="widget" class="row">
+                    <div class="col-lg-12">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-content">
+                                <div>
+                                    <h3 class="font-bold no-margins">
+                                        Your statistics
+                                    </h3>
+                                    <small>NewsFeed & News</small>
+                                </div>
+                                <div class="m-t-sm">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <ul class="stat-list m-t-lg">
+                                                <li>
+                                                    <h2 class="no-margins">{{totalFeeds}}</h2>
+                                                    <small>Total feeds</small>
+                                                    <div class="progress progress-mini">
+                                                        <div id="line1" class="progress-bar" style="width: 100%;"></div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <h2 class="no-margins">{{totalNews}}</h2>
+                                                    <small>Total news</small>
+                                                    <div class="progress progress-mini">
+                                                        <div id="line2" class="progress-bar" style="width: 100%;"></div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-t-md">
+                                    <small class="pull-right">
+                                        <i class="fa fa-clock-o"> </i>
+                                        Latest update on <span>{{lastUpdate}}</span>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>Feeds</h5>
+                            </div>
+                            <div class="ibox-content">
+                                <div class="row">
+                                    <div class="col-sm-9 m-b-xs">
+                                        <button id="addNew">Add new</button>
+                                        <button id="back" class="hidden">back</button>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div id="search" class="input-group hidden">
+                                            <input type="text" placeholder="Search" class="input-sm form-control" style="height: 29px;">
+                                            <span class="input-group-btn">
+                                                <button id="go" type="button" class="btn btn-sm btn-primary">Go!</button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+                                <meta name="_csrf" th:content="${_csrf.token}"/>
+                                <div id="feeds" class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th><a class="sorter" data-sort="id">#</a></th>
+                                            <th><a class="sorter" data-sort="name">name</a></th>
+                                            <th><a class="sorter" data-sort="type">type</a></th>
+                                            <th><a class="sorter" data-sort="url">url</a></th>
+                                            <th>frequency</th>
+                                            <th>enabled</th>
+                                            <th style="width: 14%;">actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="feedList"></tbody>
+                                    </table>
+                                    <span class="input-group-btn text-center">
+                                        <button id="smf" type="button" class="btn btn-primary btn-lg btn-block hidden">
+                                            show more
+                                        </button>
+                                    </span>
+                                </div>
+                                <div id="news" class="table-responsive hidden">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th><a class="sorterNews" data-sort="id">#</a></th>
+                                            <th>img</th>
+                                            <th><a class="sorterNews" data-sort="title">title</a></th>
+                                            <th><a class="sorterNews" data-sort="datetime">datetime</a></th>
+                                            <th style="width: 14%;">actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="newsList"></tbody>
+                                    </table>
+                                    <span class="input-group-btn text-center">
+                                        <button id="smn" type="button" class="btn btn-primary btn-lg btn-block hidden">
+                                            show more
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="pull-right">
+                🐱🦄💪
+            </div>
+            <div>
+                <strong>Copyright</strong> Amazing Company &copy; 2017
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="article" class="hidden">
+    <div class="ibox">
+        <div class="ibox-content">
+            <div class="text-center">
+                <span class="text-muted datetime"></span>
+                <h1 class="title"></h1>
+            </div>
+            <div class="content"></div>
+        </div>
+    </div>
+</div>
+
+<div id="addNewFeed" title="Add new Feed" class="hidden">
+    <p class="validateTips">All form fields are required.</p>
+    <form>
+        <input type="hidden" name="id" value="">
+        <fieldset>
+            <div class="form-group" style="width: 300px;">
+                <label>Name</label>
+                <input type="text" name="name" class="form-control text ui-widget-content ui-corner-all" required>
+            </div>
+            <div class="form-group" style="width: 300px;">
+                <label>Url</label>
+                <input type="url" name="url" class="form-control text ui-widget-content ui-corner-all" required>
+            </div>
+            <div class="form-group" style="width: 300px;">
+                <label>Type</label>
+                <select class="form-control" name="type" required>
+                    <option value="RSS">RSS</option>
+                    <option value="HTML">HTML</option>
+                </select>
+            </div>
+            <div class="form-group" style="width: 300px;">
+                <label>Frequency</label>
+                <input type="number" name="checkFrequency" class="form-control text ui-widget-content ui-corner-all" required>
+            </div>
+            <div class="form-group" style="width: 300px;">
+                <label>Title tag/id/class/xpath</label>
+                <input type="text" name="titleTag" class="form-control text ui-widget-content ui-corner-all" required>
+            </div>
+            <div class="form-group" style="width: 300px;">
+                <label>Article tag/id/class/xpath</label>
+                <input type="text" name="articleTag" class="form-control text ui-widget-content ui-corner-all"
+                       required>
+            </div>
+            <div class="form-group" style="width: 300px;">
+                <label>Datetime tag/id/class/xpath</label>
+                <input type="text" name="datetimeTag" class="form-control text ui-widget-content ui-corner-all"
+                       required>
+            </div>
+            <div class="form-group" style="width: 300px;">
+                <label>Enabled</label>
+                <input type="checkbox" name="enabled"/>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+<div th:replace="layouts/footer">...</div>
+</body>
+</html>
